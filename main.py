@@ -25,14 +25,16 @@ class EllipticCurve:
     def addPoint(cls, point1, point2):
         """
 
-        :param point1:
-        :param point2:
-        :return:
+        :param point1: first point tuple (x, y)
+        :param point2: second point tuple (x, y)
+        :return: (x, y) of point = point1 + point2 by rules
         """
 
-        if point1 == (0, 0):  # 0 + point2 = point2
+        # 0 + point2 = point2
+        if point1 == (0, 0):
             return point2
-        if point2 == (0, 0):  # point1 + 0 = point1
+        # point1 + 0 = point1
+        if point2 == (0, 0):
             return point1
 
         x1, y1 = point1
@@ -40,14 +42,14 @@ class EllipticCurve:
 
         if x1 == x2:
             if y1 != y2: return (0, 0)
-            #
-            l = (3 * x1 * x1 + curve.a) * inverse_mod(2 * y1, curve.p)
+            # l = (3x1^2 + a)/(2y1) (mod p) = (3x1^2 + a) * 2y1 (inverse_mod p)
+            l = (3 * x1 ** 2 + curve.a) * inverse_mod(2 * y1, curve.p)
         else:
-            #
-            l = (y1 - y2) * inverse_mod(x1 - x2, curve.p)
+            # l = (y2 - y1)/(x2 - x1) (mod p) = (y2 - y1) * (x2 - x1) (inverse_mod p)
+            l = (y2 - y1) * inverse_mod(x2 - x1, curve.p)
 
         x = (l ** 2 - x1 - x2) % curve.p
-        y = -(l * (x - x1) + y1) % curve.p
+        y = (l * (x1 - x) - y1) % curve.p
 
         return (x, y)
 
@@ -55,12 +57,13 @@ class EllipticCurve:
     def multiplyPoint(cls, k, point):
         """
         
-        :param k: 
-        :param point: 
-        :return: 
+        :param k: multiplicity of a point
+        :param point: point tuple (x, y)
+        :return: (Cx, Cy) of point C = kG
         """
 
-        if k < 0:  # k * point = -k * (-point)
+        # k * point = -k * (-point)
+        if k < 0:
             return cls.multiplyPoint(-k, (-point[0], - point[1]))
 
         tempPoint = point
@@ -75,7 +78,7 @@ class EllipticCurve:
         return result
 
     def getPointX(self, k):
-        return self.multiplyPoint(k, self.g)
+        return self.multiplyPoint(k, self.g)[0]
 
 
 def hash_message(message):
@@ -93,17 +96,15 @@ def hash_message(message):
 
 def inverse_mod(k, p):
     """
-
-    :param k:
-    :param p:
+    The inverse of k modulo p.
+        (x * k) % p == 1
+    :param k: k
+    :param p: the module
     :return: the integer x such that (x * k) % p == 1.
     """
-    """Returns the inverse of k modulo p.
-    This function returns the only integer x such that (x * k) % p == 1.
-    k must be non-zero and p must be a prime.
-    """
+
+    # k ** -1 = p - (-k) ** -1  (mod p)
     if k < 0:
-        # k ** -1 = p - (-k) ** -1  (mod p)
         return p - inverse_mod(-k, p)
 
     # Extended Euclidean algorithm.
@@ -138,8 +139,8 @@ class Digital_signature():
     def form(self, d):
         """
 
-        :param d:
-        :return:
+        :param d: private key
+        :return: a signature tuple (r, s)
         """
         a = self.message_hash
         e = a % curve.q
@@ -149,7 +150,7 @@ class Digital_signature():
         while r == 0:
             # k = randrange(1, curve.q - 1)
             k = 53854137677348463731403841147996619241504003434302020712960838528893196233395
-            x, y = curve.getPointX(k)
+            x = curve.getPointX(k)
             r = x % curve.q
         s = (r * d + k * e) % curve.q
 
@@ -158,8 +159,8 @@ class Digital_signature():
     def check(self, public_key, signature):
         """
 
-        :param public_key:
-        :param signature:
+        :param public_key: public key tuple (Qx, Qy)
+        :param signature: a signature tuple (r, s)
         :return:
         """
         valid = '\tSuccessful signature verification'
@@ -173,6 +174,7 @@ class Digital_signature():
         e = a % curve.q
         if e == 0: e = 1
 
+        # v = e^(-1) (mod q) = e (inverse_mod q)
         v = inverse_mod(e, curve.q)
 
         z1 = (s * v) % curve.q
