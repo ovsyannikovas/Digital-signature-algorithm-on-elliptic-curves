@@ -1,6 +1,7 @@
 from hashlib import sha512
 from random import randrange
 
+
 class EllipticCurve:
     """
     # y^2 = x^3 + a * x + b (mod p)
@@ -56,7 +57,7 @@ class EllipticCurve:
     @classmethod
     def multiplyPoint(cls, k, point):
         """
-        
+
         :param k: multiplicity of a point
         :param point: point tuple (x, y)
         :return: (Cx, Cy) of point C = kG
@@ -189,6 +190,7 @@ class Digital_signature():
 
         return valid if R == r else invalid
 
+
 curve = EllipticCurve(
     name="example1",
     a=7,
@@ -199,6 +201,7 @@ curve = EllipticCurve(
     Gx=2,
     Gy=4018974056539037503335449422937059775635739389905545080690979365213431566280
 )
+
 
 # curve = EllipticCurve(
 #     name="example2",
