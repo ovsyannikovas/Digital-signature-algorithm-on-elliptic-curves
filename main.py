@@ -206,7 +206,7 @@ def main():
             "\tChoose operation:\n"
             "\t\t1 - form new digital signature\n"
             "\t\t2 - check digital signature\n"
-            "\t\t3 - hash message\n"
+            "\t\t3 - hash message modulo p\n"
             "\t\t0 - exit\n"
         ))
         print("-" * wide)
@@ -270,7 +270,7 @@ def main():
         elif choice == 3:
             message = input('\tEnter a message: ')
             hashed_message = hash_message(message)
-            print(f"\tMessage hash: {hashed_message}")
+            print(f"\tMessage hash modulo p: {hashed_message}")
 
 
 if __name__ == '__main__':
