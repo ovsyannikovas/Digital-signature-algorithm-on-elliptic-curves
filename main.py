@@ -95,7 +95,7 @@ def hash_message(message):
     bin_hash = sha512(message.encode("utf-8")).digest()
     dec_hash = int.from_bytes(bin_hash, 'big')
 
-    return (dec_hash >> (dec_hash.bit_length() - curve.q.bit_length()))
+    return dec_hash >> (dec_hash.bit_length() - curve.q.bit_length())
 
 
 def inverse_mod(k, p):
@@ -207,7 +207,7 @@ def main():
             "\tChoose operation:\n"
             "\t\t1 - form new digital signature\n"
             "\t\t2 - check digital signature\n"
-            "\t\t3 - hash message modulo p\n"
+            "\t\t3 - hash message\n"
             "\t\t0 - exit\n"
         ))
         print("-" * wide)
