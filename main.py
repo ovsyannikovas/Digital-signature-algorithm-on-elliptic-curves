@@ -95,7 +95,7 @@ def hash_message(message):
     bin_hash = sha512(message.encode("utf-8")).digest()
     dec_hash = int.from_bytes(bin_hash, 'big')
 
-    return (dec_hash >> (dec_hash.bit_length() - curve.q.bit_length())) % curve.p
+    return (dec_hash >> (dec_hash.bit_length() - curve.q.bit_length()))
 
 
 def inverse_mod(k, p):
@@ -145,7 +145,8 @@ class Digital_signature():
         :param d: private key
         :return: a signature tuple (r, s)
         """
-        e = self.message_hash
+
+        e = self.message_hash % curve.q
         if e == 0: e = 1
 
         r, k = 0, 0
@@ -172,12 +173,12 @@ class Digital_signature():
         """
         valid = '\tSuccessful signature verification'
         invalid = '\tInvalid signature verification'
-        e = self.message_hash
 
         r, s = signature
         if not (0 < r < curve.q and 0 < s < curve.q):
             return invalid
 
+        e = self.message_hash % curve.q
         if e == 0: e = 1
 
         # v = e^(-1) (mod q) = e (inverse_mod q)
@@ -222,7 +223,7 @@ def main():
                 hashed_message = 2897963881682868575562827278553865049173745197871825199562947419041388950970536661109553499954248733088719748844538964641281654463513296973827706272045964
             else:
                 private_key = int(input('\tEnter a private key (d): '))
-                hashed_message = int(input('\tEnter a message hash modulo p (e): '))
+                hashed_message = int(input('\tEnter a message hash (alpha): '))
                 print("-" * wide)
 
             signature.message_hash = hashed_message
@@ -261,7 +262,7 @@ def main():
                     int(input('\tEnter the 1st part of signature (r): ')),
                     int(input('\tEnter the 2nd part of signature (s): '))
                 )
-                hashed_message = int(input('\tEnter a message hash modulo p (e): '))
+                hashed_message = int(input('\tEnter a message hash (alpha): '))
                 print("-" * wide)
 
             signature.message_hash = hashed_message
