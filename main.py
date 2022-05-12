@@ -4,7 +4,7 @@ from random import randrange
 
 class EllipticCurve:
     """
-    # y^2 = x^3 + a * x + b (mod p)
+     y^2 = x^3 + a * x + b (mod p)
     """
 
     def __init__(self, a, b, p, q, m, Gx, Gy, name):
