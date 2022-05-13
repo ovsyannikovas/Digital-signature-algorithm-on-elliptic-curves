@@ -86,7 +86,7 @@ class EllipticCurve:
 
 def hash_message(message):
     """
-    The algorithm for hashing a message with the SHA512 hash function modulo p.
+    The algorithm for hashing a message with the SHA512 hash function.
 
     :param message: message line
     :return: truncated SHA521 hash of the message
