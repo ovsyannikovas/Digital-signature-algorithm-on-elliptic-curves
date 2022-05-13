@@ -271,7 +271,7 @@ def main():
         elif choice == 3:
             message = input('\tEnter a message: ')
             hashed_message = hash_message(message)
-            print(f"\tMessage hash modulo p: {hashed_message}")
+            print(f"\tMessage hash: {hashed_message}")
 
 
 if __name__ == '__main__':
