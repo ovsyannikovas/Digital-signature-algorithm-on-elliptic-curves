@@ -22,8 +22,8 @@ class EllipticCurve:
         # Base point coordinates
         self.g = (Gx, Gy)
 
-    @classmethod
-    def addPoint(cls, point1, point2):
+    @staticmethod
+    def addPoint(point1, point2):
         """
         An algorithm for adding one point of an elliptic curve to another point.
 
@@ -276,7 +276,7 @@ def main():
 
 if __name__ == '__main__':
     # choosing program mode
-    example = 2
+    example = 1
 
     if example == 1:
         curve = EllipticCurve(
